@@ -1,90 +1,42 @@
 import React from 'react'
 import Head from 'next/head'
-import Nav from '../components/nav'
+import Link from 'next/link';
+import { useObservable } from 'rxjs-hooks';
 
 import '../public/css/style.css';
+import { tasksStore$, updateTask } from '../store/tasks/facade';
+import { TaskItem } from '../components/task-item';
 
-const Home = () => (
-  <div>
-    <Head>
-      <title>Home</title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+const Home = () => {
+  const tasksStore = useObservable(() => tasksStore$, {tasks: []});
 
-    <Nav />
+  return (
+    <div className="container bg-gray-100 h-screen">
+      <Head>
+        <title>מטלות</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-    <div className="hero">
-      <h1 className="title text-gray-600">Welcome to Next.js!</h1>
-      <p className="description">
-        To get started, edit <code>pages/index.js</code> and save to reload.
-      </p>
+      <nav className="flex items-center justify-between flex-wrap bg-teal-500 px-6 py-4 mb-6 text-white">
+        <h1 className="text-2xl">
+          רשימת המטלות
+        </h1>
+        <div>
+          <Link href='/new-task'>
+            <a href="#" className="inline-block text-sm px-4 py-2 leading-none border rounded border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">מטלה חדשה</a>
+          </Link>
+        </div>
+      </nav>
 
-      <div className="row">
-        <a href="https://nextjs.org/docs" className="card">
-          <h3>Documentation &rarr;</h3>
-          <p>Learn more about Next.js in the documentation.</p>
-        </a>
-        <a href="https://nextjs.org/learn" className="card">
-          <h3>Next.js Learn &rarr;</h3>
-          <p>Learn about Next.js by following an interactive tutorial!</p>
-        </a>
-        <a
-          href="https://github.com/zeit/next.js/tree/master/examples"
-          className="card"
-        >
-          <h3>Examples &rarr;</h3>
-          <p>Find other example boilerplates on the Next.js GitHub.</p>
-        </a>
-      </div>
+      <main>
+        {
+          tasksStore.tasks.map(task => (
+            <TaskItem key={task.id} task={task} changeStatus={updateTask.bind(null, task.id, 'status')} />
+          ))
+        }
+      </main>
     </div>
+  )
+}
 
-    <style jsx>{`
-      .hero {
-        width: 100%;
-        color: #333;
-      }
-      .title {
-        margin: 0;
-        width: 100%;
-        padding-top: 80px;
-        line-height: 1.15;
-        font-size: 48px;
-      }
-      .title,
-      .description {
-        text-align: center;
-      }
-      .row {
-        max-width: 880px;
-        margin: 80px auto 40px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-      }
-      .card {
-        padding: 18px 18px 24px;
-        width: 220px;
-        text-align: left;
-        text-decoration: none;
-        color: #434343;
-        border: 1px solid #9b9b9b;
-      }
-      .card:hover {
-        border-color: #067df7;
-      }
-      .card h3 {
-        margin: 0;
-        color: #067df7;
-        font-size: 18px;
-      }
-      .card p {
-        margin: 0;
-        padding: 12px 0 0;
-        font-size: 13px;
-        color: #333;
-      }
-    `}</style>
-  </div>
-)
-
-export default Home
+export default Home;
