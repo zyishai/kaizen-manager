@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useObservable } from 'rxjs-hooks';
 
 import '../public/css/style.css';
-import { tasksStore$, updateTask } from '../store/tasks/facade';
+import { tasksStore$, updateTask, removeTask } from '../store/tasks/facade';
 import { TaskItem } from '../components/task-item';
 
 const Home = () => {
@@ -31,7 +31,7 @@ const Home = () => {
       <main>
         {
           tasksStore.tasks.map(task => (
-            <TaskItem key={task.id} task={task} changeStatus={updateTask.bind(null, task.id, 'status')} />
+            <TaskItem key={task.id} task={task} changeStatus={updateTask.bind(null, task.id, 'status')} deleteTask={removeTask.bind(null, task.id)} />
           ))
         }
       </main>
