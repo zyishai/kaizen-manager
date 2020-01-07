@@ -1,6 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import Link from 'next/link';
+import Router from 'next/router';
 import { useObservable } from 'rxjs-hooks';
 
 import '../public/css/style.css';
@@ -31,7 +32,14 @@ const Home = () => {
       <main>
         {
           tasksStore.tasks.map(task => (
-            <TaskItem key={task.id} task={task} changeStatus={updateTask.bind(null, task.id, 'status')} deleteTask={removeTask.bind(null, task.id)} />
+            <TaskItem 
+              key={task.id} 
+              task={task} 
+              changeStatus={updateTask.bind(null, task.id, 'status')} 
+              deleteTask={removeTask.bind(null, task.id)}
+              updateTask={() => {
+                Router.push(`/update-task?task=${JSON.stringify(task)}`, '/update-task');
+              }} />
           ))
         }
       </main>
